@@ -171,7 +171,7 @@ class OverlayMemberCertificate {
     expire_at_ = std::numeric_limits<td::int32>::max();
   }
   OverlayMemberCertificate(PublicKey signed_by, td::uint32 flags, td::int32 slot, td::int32 expire_at,
-                         td::BufferSlice signature)
+                           td::BufferSlice signature)
       : signed_by_(std::move(signed_by))
       , flags_(flags)
       , slot_(slot)
@@ -258,16 +258,15 @@ class OverlayMemberCertificate {
   td::SharedSlice signature_;
 };
 
-
 struct OverlayOptions {
   bool announce_self_ = true;
   bool frequent_dht_lookup_ = false;
   td::uint32 local_overlay_member_flags_ = 0;
   td::int32 max_slaves_in_semiprivate_overlay_ = 5;
-  td::uint32 max_peers_ = 20;
-  td::uint32 max_neighbours_ = 5;
+  td::uint32 max_peers_ = 100;
+  td::uint32 max_neighbours_ = 30;
   td::uint32 nodes_to_send_ = 4;
-  td::uint32 propagate_broadcast_to_ = 5;
+  td::uint32 propagate_broadcast_to_ = 3;
   td::uint32 default_permanent_members_flags_ = 0;
 };
 
@@ -321,9 +320,8 @@ class Overlays : public td::actor::Actor {
   virtual void create_semiprivate_overlay(adnl::AdnlNodeIdShort local_id, OverlayIdFull overlay_id,
                                           std::vector<adnl::AdnlNodeIdShort> nodes,
                                           std::vector<PublicKeyHash> root_public_keys,
-                                          OverlayMemberCertificate certificate,
-                                          std::unique_ptr<Callback> callback, OverlayPrivacyRules rules,
-                                          td::string scope, OverlayOptions opts) = 0;
+                                          OverlayMemberCertificate certificate, std::unique_ptr<Callback> callback,
+                                          OverlayPrivacyRules rules, td::string scope, OverlayOptions opts) = 0;
   virtual void create_private_overlay(adnl::AdnlNodeIdShort local_id, OverlayIdFull overlay_id,
                                       std::vector<adnl::AdnlNodeIdShort> nodes, std::unique_ptr<Callback> callback,
                                       OverlayPrivacyRules rules, std::string scope) = 0;
